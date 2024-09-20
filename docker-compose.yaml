@@ -1,0 +1,191 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"
+    networks:
+      - kafka-network
+
+  mongoexpress:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    depends_on:
+      - mongo
+    restart: always
+    networks:
+      - kafka-network
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    ports:
+      - '3000:80'
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:4000
+    # env_file:
+    #   - ./apps/web/.env 
+    networks:
+      - kafka-network
+
+  task-management-service:
+    build:
+      context: ./apps/task-management-service
+      dockerfile: Dockerfile
+    ports:
+      - '4000:4000'
+    environment:
+      - MONGODB_URI=mongodb://admin:admin@mongo:27017/tasks-manager?authSource=admin
+      - KAFKA_BROKER_URL=kafka:9092
+      - KAFKA_CLIENT_ID=nestjs-client
+      - KAFKA_CONSUMER_GROUP_ID=nestjs-consumer-group
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=info
+      - LOGGING_DESTINATION=elasticsearch
+      - LOG_FILE_PATH=logs/app.log
+      - BATCH_SIZE=100
+      - ELASTICSEARCH_API_KEY=n9aRCpIB0Tjy1CvJxMmQ
+      - ELASTICSEARCH_INDEX_PREFIX=nestjs-logs
+      - ELASTICSEARCH_NODE=http://elasticsearch:9200
+    # env_file:
+    #   - ./apps/task-management-service/.env
+    networks:
+      - kafka-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - kafka-network
+  
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    networks:
+      - kafka-network
+
+  # kafka-ui:
+  #   image: provectuslabs/kafka-ui:latest
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     KAFKA_CLUSTERS_0_NAME: local
+  #     KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+  #     KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+  #     KAFKA_CLUSTERS_0_PROPERTIES: security.protocol=PLAINTEXT
+  #   networks:
+  #     - kafka-network
+
+  # kafka-producer:
+  #   image: confluentinc/cp-kafka:latest
+  #   depends_on:
+  #     - kafka
+  #   command: sh -c "echo 'hello world' | kafka-console-producer --broker-list kafka:9092 --topic test-topic"
+  #   environment:
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  #   networks:
+  #     - kafka-network   
+
+  redis:
+    image: "redis:alpine"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    # volumes:
+    #   - redis_data:/data
+    networks:
+      - kafka-network
+
+#   elasticsearch:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+#     environment:
+#       - discovery.type=single-node
+#       - xpack.security.enabled=false
+#       - ELASTIC_PASSWORD=changeme # Change this to a secure password
+#     ports:
+#       - "9200:9200"
+#     volumes:
+#       - shared_volume:/usr/share/elasticsearch/api  
+
+#   es-init:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+#     user: root  # Run as root to have permission to modify file permissions
+#     depends_on:
+#       - elasticsearch
+#     volumes:
+#       - shared_volume:/usr/share/elasticsearch/api  
+#     entrypoint: >
+#       sh -c "
+#       chmod -R 777 /usr/share/elasticsearch/api;
+#       until curl -u elastic:changeme -s http://elasticsearch:9200/_cluster/health | grep 'green'; do
+#         sleep 1;
+#       done;
+#       curl -u elastic:changeme -X POST http://elasticsearch:9200/_security/api_key -H 'Content-Type: application/json' -d '{
+#         \"name\": \"winston_logging_api_key\",
+#         \"expiration\": \"1d\",
+#         \"role_descriptors\": {
+#           \"log_writer\": {
+#             \"cluster\": [\"monitor\"],
+#             \"index\": [{\"names\": [\"logs-*\"], \"privileges\": [\"write\"]}]
+#           }
+#         }
+#       }' > /usr/share/elasticsearch/api/api_key.json;"
+
+#   logstash:
+#     image: docker.elastic.co/logstash/logstash:7.15.0
+#     volumes:
+#       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+#     ports:
+#       - "5001:5000"
+#       - "9600:9600"
+#     depends_on:
+#       - elasticsearch
+
+#   kibana:
+#     image: docker.elastic.co/kibana/kibana:7.15.0
+#     environment:
+#       ELASTICSEARCH_URL: http://elasticsearch:9200
+#       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+#     ports:
+#       - "5601:5601"
+#     depends_on:
+#       - elasticsearch  
+
+# volumes:
+#   es_data:
+#     driver: local
+#   shared_volume:
+#     driver: local
+#     driver_opts:
+#       type: "tmpfs"
+#       device: "tmpfs"
+#       o: "uid=1000,gid=1000,mode=1777" 
+
+networks:
+  kafka-network:
+    driver: bridge
+  

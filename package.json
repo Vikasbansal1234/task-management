@@ -1,0 +1,32 @@
+{
+  "name": "proactforge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:server": "pnpm --filter server start",
+    "start:web": "pnpm --filter web start",
+    "start:frontend": "pnpm --filter frontend start",
+    "build": "pnpm --recursive run build",
+    "test": "pnpm --recursive run test",
+    "lint": "pnpm --recursive run lint",
+    "docker:dev": "docker-compose -f docker-compose.dev.yaml up --build",
+    "docker:prod": "docker-compose -f docker-compose.yaml up --build",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yaml down",
+    "docker:prod:down": "docker-compose -f docker-compose.yaml down"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/mongoose": "^5.11.97",
+    "pnpm": "^6.0.0"
+  },
+  "dependencies": {
+    "@nestjs/config": "^3.2.3",
+    "@nestjs/mongoose": "^10.0.10",
+    "@pnpm/make-dedicated-lockfile": "^0.6.13",
+    "joi": "^17.13.3",
+    "mongoose": "^8.5.1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@your-org/common-modules",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/core": "^8.0.0"
+  }
+}

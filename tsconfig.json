@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "target": "es2017",
+    "lib": ["es2017"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true
+  },
+  "include": [
+    "apps/*/src/**/*.ts",    // If microservices are in 'apps' folder
+    "packages/*/src/**/*.ts"  // For shared packages
+  ],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,169 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.pnpm-store/
+
+# Logs
+logs/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependency directories
+packages/**/node_modules
+apps/**/node_modules
+
+# Build output
+dist/
+build/
+.tmp/
+.cache/
+coverage/
+
+# Docker
+*.log
+docker-compose.yml
+docker-compose.override.yml
+.docker/
+.dockerignore
+
+# MacOS
+.DS_Store
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.test
+.env.production
+.env.development
+
+# gatsby files
+.cache/
+
+
+# Gridsome files
+.cache/
+
+
+# Gatsby files
+.cache/
+
+
+# Output of 'npm pack'
+*.tgz
+
+# TernJS port file
+.tern-port
+
+# Next.js build output
+.next/
+out/
+
+# Nuxt.js build / generate output
+.nuxt/
+dist/
+
+# vuepress build output
+.vuepress/dist
+
+# Sapper build / export output
+__sapper__/
+
+# Docusaurus
+.build/
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Storybook build outputs
+.out/
+.storybook/out/
+
+# Plop.js node_modules
+.plop/
+
+# Docz build outputs
+.docz/dist/
+
+# Exclude all '.local' files
+*.local
+
+# Sapper build / export output
+__sapper__/
+
+# Expo
+.expo/
+.expo-shared/
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# Jest cache
+jest/
+
+# Optional comment with additional context
+# Uncomment to ignore the whole 'node_modules' directory:
+# node_modules/
+
+# Custom additions for your project
+apps/server/node_modules/
+apps/server/dist/
+apps/server/.env
+apps/server/*.log
+apps/server/**/*.log
+
+kafka-data
+db_data
+# End of file
