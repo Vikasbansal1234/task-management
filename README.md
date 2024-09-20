@@ -179,5 +179,6 @@ NestJS: The backend also includes Jest-based tests for many core functionalities
 
 ### Video
 
-[Watch the demo video](https://vimeo.com/1011284420?share=copy#t=0)
+[Watch the demo video 1](https://vimeo.com/1011300603?share=copy#t=0)
+[Watch the demo video 2](https://vimeo.com/1011284420?share=copy#t=0)
 
