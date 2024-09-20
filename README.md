@@ -179,5 +179,5 @@ NestJS: The backend also includes Jest-based tests for many core functionalities
 
 ### Video
 
-[Watch the demo video](./video/tasks-manager.mov)
+[Watch the demo video](https://vimeo.com/1011284420?share=copy#t=0)
 
